@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_05_080638) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_05_090727) do
   create_table "chats", force: :cascade do |t|
     t.string "model_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.integer "bookmark_id"
+    t.string "action", null: false
+    t.datetime "occurred_at"
+    t.text "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
