@@ -10,4 +10,8 @@ class BookmarksController < ApplicationController
       q: q
     }.compact_blank)
   end
+
+  def autotag
+    LinkdingAutotagJob.perform_later(params[:id])
+  end
 end
