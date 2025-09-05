@@ -1,0 +1,9 @@
+<nav class="pagination" role="navigation" aria-label="pagination">
+  <% if offset > 0 %>
+    <a href="<%= url_for(params.to_unsafe_h.merge(offset: [offset - limit, 0].max)) %>" class="pagination-previous">Previous</a>
+  <% end %>
+
+  <% if offset + limit < @bookmarks.count %>
+    <a href="<%= url_for(params.to_unsafe_h.merge(offset: [offset + limit, @bookmarks.count - limit].max)) %>" class="pagination-next">Next page</a>
+  <% end %>
+</nav>

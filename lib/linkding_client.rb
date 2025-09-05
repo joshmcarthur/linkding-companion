@@ -1,18 +1,20 @@
 require "faraday"
 require "json"
+require "ostruct"
 
 class LinkdingClient
   class Error < StandardError; end
   class AuthenticationError < Error; end
   class NotFoundError < Error; end
   class ValidationError < Error; end
+  class UnconfiguredError < Error; end
 
   def initialize(host: nil, api_key: nil)
     @host = host || config_host
     @api_key = api_key || config_api_key
 
-    raise ArgumentError, "Linkding host is required" if @host.blank?
-    raise ArgumentError, "Linkding API key is required" if @api_key.blank?
+    raise UnconfiguredError, "Linkding host is required. Please configure in credentials or environment variables." if @host.blank?
+    raise UnconfiguredError, "Linkding API key is required. Please configure in credentials or environment variables." if @api_key.blank?
 
     @connection = build_connection
   end
@@ -132,7 +134,7 @@ class LinkdingClient
   def build_connection
     Faraday.new(url: @host) do |conn|
       conn.request :json
-      conn.response :json, content_type: /\bjson$/
+      conn.response :json, content_type: /\bjson$/, parser_options: { object_class: OpenStruct }
       conn.headers["Authorization"] = "Token #{@api_key}"
       conn.headers["User-Agent"] = "linkding-companion/#{version}"
       conn.adapter Faraday.default_adapter

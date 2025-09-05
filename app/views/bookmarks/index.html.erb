@@ -1,0 +1,5 @@
+<h1 class="title">Bookmarks</h1>
+<h2 class="subtitle">All your bookmarks in one place</h2>
+
+<%= render partial: "bookmark", collection: @bookmarks.results, as: :bookmark %>
+<%= render "pagination", offset: params.fetch(:offset, 0).to_i, limit: params.fetch(:limit, 10).to_i %>

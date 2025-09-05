@@ -23,6 +23,9 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <%= render "application/navbar" %>
+      <%= yield %>
+    </div>
   </body>
 </html>

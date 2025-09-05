@@ -1,0 +1,45 @@
+<%= turbo_frame_tag "bookmark_#{bookmark.id}" do %>
+  <div class="box mb-4">
+    <article class="media">
+      <div class="media-left">
+        <figure class="image is-32x32">
+          <img src="<%= bookmark.favicon_url%>" alt="Image" />
+        </figure>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong><%= bookmark.title %></strong><br>
+            <small><%= distance_of_time_in_words_to_now(bookmark.date_added) %> ago</small>
+            <br />
+            <%= simple_format(bookmark.description) %>
+          </p>
+        </div>
+        <% if bookmark.tag_names.any? %>
+          <nav class="level is-mobile">
+            <ul>
+              <% bookmark.tag_names.each do |tag| %>
+                <li><%= tag %></li>
+              <% end %>
+            </ul>
+          </nav>
+        <% end %>
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" aria-label="reply">
+              Autotag
+            </a>
+            <a class="level-item" aria-label="retweet">
+              Summarise
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div class="media-right">
+        <figure class="image is-128x128">
+          <img src="<%= bookmark.preview_image_url %>" alt="Image" />
+        </figure>
+      </div>
+    </article>
+  </div>
+<% end %>
