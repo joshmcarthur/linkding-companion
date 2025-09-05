@@ -1,5 +1,5 @@
-require 'faraday'
-require 'json'
+require "faraday"
+require "json"
 
 class LinkdingClient
   class Error < StandardError; end
@@ -19,11 +19,11 @@ class LinkdingClient
 
   # Bookmarks API
   def list_bookmarks(params = {})
-    get('/api/bookmarks/', params)
+    get("/api/bookmarks/", params)
   end
 
   def list_archived_bookmarks(params = {})
-    get('/api/bookmarks/archived/', params)
+    get("/api/bookmarks/archived/", params)
   end
 
   def get_bookmark(id)
@@ -31,11 +31,11 @@ class LinkdingClient
   end
 
   def check_bookmark(url)
-    get('/api/bookmarks/check/', { url: url })
+    get("/api/bookmarks/check/", { url: url })
   end
 
   def create_bookmark(bookmark_data)
-    post('/api/bookmarks/', bookmark_data)
+    post("/api/bookmarks/", bookmark_data)
   end
 
   def update_bookmark(id, bookmark_data)
@@ -73,7 +73,7 @@ class LinkdingClient
   end
 
   def upload_bookmark_asset(bookmark_id, file)
-    payload = { file: Faraday::UploadIO.new(file, 'application/octet-stream') }
+    payload = { file: Faraday::UploadIO.new(file, "application/octet-stream") }
     response = @connection.post("/api/bookmarks/#{bookmark_id}/assets/upload/") do |req|
       req.body = payload
     end
@@ -86,7 +86,7 @@ class LinkdingClient
 
   # Tags API
   def list_tags(params = {})
-    get('/api/tags/', params)
+    get("/api/tags/", params)
   end
 
   def get_tag(id)
@@ -94,12 +94,12 @@ class LinkdingClient
   end
 
   def create_tag(tag_data)
-    post('/api/tags/', tag_data)
+    post("/api/tags/", tag_data)
   end
 
   # Bundles API
   def list_bundles(params = {})
-    get('/api/bundles/', params)
+    get("/api/bundles/", params)
   end
 
   def get_bundle(id)
@@ -107,7 +107,7 @@ class LinkdingClient
   end
 
   def create_bundle(bundle_data)
-    post('/api/bundles/', bundle_data)
+    post("/api/bundles/", bundle_data)
   end
 
   def update_bundle(id, bundle_data)
@@ -124,7 +124,7 @@ class LinkdingClient
 
   # User API
   def get_user_profile
-    get('/api/user/profile/')
+    get("/api/user/profile/")
   end
 
   private
@@ -133,8 +133,8 @@ class LinkdingClient
     Faraday.new(url: @host) do |conn|
       conn.request :json
       conn.response :json, content_type: /\bjson$/
-      conn.headers['Authorization'] = "Token #{@api_key}"
-      conn.headers['User-Agent'] = "linkding-companion/#{version}"
+      conn.headers["Authorization"] = "Token #{@api_key}"
+      conn.headers["User-Agent"] = "linkding-companion/#{version}"
       conn.adapter Faraday.default_adapter
     end
   end
@@ -185,10 +185,10 @@ class LinkdingClient
   def extract_error_message(body)
     return body unless body.is_a?(Hash)
 
-    if body['detail']
-      body['detail']
-    elsif body['errors']
-      body['errors'].is_a?(Array) ? body['errors'].join(', ') : body['errors']
+    if body["detail"]
+      body["detail"]
+    elsif body["errors"]
+      body["errors"].is_a?(Array) ? body["errors"].join(", ") : body["errors"]
     else
       body.to_s
     end
@@ -196,16 +196,16 @@ class LinkdingClient
 
   def config_host
     Rails.application.credentials.linkding&.host ||
-      ENV['LINKDING_HOST']
+      ENV["LINKDING_HOST"]
   end
 
   def config_api_key
     Rails.application.credentials.linkding&.api_key ||
-      ENV['LINKDING_API_KEY']
+      ENV["LINKDING_API_KEY"]
   end
 
   def version
     # Try to get version from app, fallback to a default
-    Rails.application.config.try(:version) || '1.0.0'
+    Rails.application.config.try(:version) || "1.0.0"
   end
 end
