@@ -19,19 +19,14 @@
           <nav class="level is-mobile">
             <ul>
               <% bookmark.tag_names.each do |tag| %>
-                <li><%= tag %></li>
+                <li class="tag is-light">#<%= tag %></li>
               <% end %>
             </ul>
           </nav>
         <% end %>
         <nav class="level is-mobile">
           <div class="level-left">
-            <a class="level-item" aria-label="reply">
-              Autotag
-            </a>
-            <a class="level-item" aria-label="retweet">
-              Summarise
-            </a>
+            <%= button_to "Autotag", bookmark_autotag_path(bookmark.id), class: "level-item button is-light" %>
           </div>
         </nav>
       </div>
