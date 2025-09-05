@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="460"
+   height="460"
+   viewBox="0 0 460 460"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="linkding.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.51304348"
+     inkscape:cx="230"
+     inkscape:cy="230"
+     inkscape:window-width="1312"
+     inkscape:window-height="449"
+     inkscape:window-x="0"
+     inkscape:window-y="44"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <g
+     id="Agrupar"
+     style="fill:#db5461;fill-opacity:1">
+    <path
+       id="Traado"
+       fill="#5856e0"
+       fill-rule="evenodd"
+       stroke="none"
+       d="M 455.280701 230.182007 C 455.280701 354.406372 354.576965 455.110138 230.3526 455.110138 C 106.12825 455.110138 5.424492 354.406372 5.424492 230.182007 C 5.424492 105.957672 106.12825 5.253906 230.3526 5.253906 C 354.576965 5.253906 455.280701 105.957672 455.280701 230.182007 Z"
+       style="fill:#db5461;fill-opacity:1" />
+  </g>
+  <g
+     id="g1"
+     style="fill:#db5461;fill-opacity:1">
+    <g
+       id="g2"
+       style="fill:#db5461;fill-opacity:1">
+      <path
+         id="path1"
+         fill="none"
+         stroke="#ffffff"
+         stroke-width="31.249989"
+         stroke-linejoin="round"
+         d="M 223.016479 85.534821 L 81.898529 226.750366 C 81.898529 226.750366 33.336662 274.199829 86.190475 328.416687 C 139.235214 382.824341 187.845581 332.624176 187.845581 332.624176 L 328.963531 191.40863"
+         style="fill:#db5461;fill-opacity:1" />
+    </g>
+    <g
+       id="g3"
+       style="fill:#db5461;fill-opacity:1">
+      <path
+         id="path2"
+         fill="none"
+         stroke="#ffffff"
+         stroke-width="31.249998"
+         stroke-linejoin="round"
+         d="M 237.14386 374.851501 L 377.717194 233.09375 C 377.717194 233.09375 426.096069 185.457672 373.033905 131.444672 C 319.780121 77.241608 271.363342 127.62851 271.363342 127.62851 L 130.790009 269.386322"
+         style="fill:#db5461;fill-opacity:1" />
+    </g>
+  </g>
+</svg>
