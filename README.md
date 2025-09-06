@@ -4,9 +4,13 @@ A Ruby on Rails application that provides a companion interface to [Linkding](ht
 
 ## Features
 
+- AI autotagging of bookmarks
+- AI summarisation of bookmarks (_coming soon_)
+- Automatic conceptual bundling of bookmarks (_coming soon_)
+- Automatic search continuation (bookmark search, expand to recommended results) (_coming soon_)
+- Roll-up bundles into email or audio digests (_coming soon_)
 - Faraday-based HTTP client for the Linkding API
 - Full API coverage including bookmarks, tags, bundles, and user profile
-- Comprehensive error handling
 - Support for Rails credentials and environment variable configuration
 
 ## Setup
@@ -35,20 +39,39 @@ linkding:
   api_key: "your-api-key-here"
 ```
 
+And for the LLM API keys:
+
+```yaml
+openai:
+  api_key: "your-openai-api-key-here"
+
+# or
+anthropic:
+  api_key: "your-anthropic-api-key-here"
+```
+
+> Note - by default gpt-4.1-nano is used for the LLM.
+
 #### Option B: Environment Variables
 
 ```bash
 export LINKDING_HOST="https://your-linkding-instance.com"
 export LINKDING_API_KEY="your-api-key-here"
+
+# LLM
+export OPENAI_API_KEY="your-openai-api-key-here"
+
+# or
+export ANTHROPIC_API_KEY="your-anthropic-api-key-here"
 ```
 
-### 3. Get Your API Key
+### 3. Get Your Linkding API Key
 
 1. Log into your Linkding instance
 2. Go to Settings
 3. Find your API token in the "REST API" section
 
-## Usage
+## API Usage
 
 ### Basic Usage
 
