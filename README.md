@@ -13,7 +13,23 @@ A Ruby on Rails application that provides a companion interface to [Linkding](ht
 - Full API coverage including bookmarks, tags, bundles, and user profile
 - Support for Rails credentials and environment variable configuration
 
-## Setup
+## Setup (Docker)
+
+With the following environment variables:
+
+- `LINKDING_HOST` - the URL of your Linkding instance
+- `LINKDING_API_KEY` - your Linkding API key
+- `OPENAI_API_KEY` - your OpenAI API key
+- `SECRET_KEY_BASE` - your secret key base. This is used to encrypt the session cookie. You can generate one with `rails secret` - `docker run --rm -it joshmcarthur/linkding_companion:latest rails secret`
+
+You can run on any port you want, but the default is 80. Linkding runs on port 9090 by default,
+so something around that range might be easy to remember.
+
+```bash
+docker run -d -p 80:80 -e LINKDING_HOST=https://linkding.example.com -e LINKDING_API_KEY=your-api-key-here -e OPENAI_API_KEY=your-openai-api-key-here -e SECRET_KEY_BASE=your-secret-key-base-here --name linkding_companion ghcr.io/joshmcarthur/linkding_companion:latest
+```
+
+## Setup (local)
 
 ### 1. Install Dependencies
 
@@ -44,13 +60,10 @@ And for the LLM API keys:
 ```yaml
 openai:
   api_key: "your-openai-api-key-here"
-
-# or
-anthropic:
-  api_key: "your-anthropic-api-key-here"
 ```
 
-> Note - by default gpt-4.1-nano is used for the LLM.
+> Note - by default gpt-4.1-nano is used for the LLM. Anthropic is also supported
+> by configuring the `anthropic.api_key` key or `ANTHROPIC_API_KEY` environment variable.
 
 #### Option B: Environment Variables
 
@@ -60,9 +73,6 @@ export LINKDING_API_KEY="your-api-key-here"
 
 # LLM
 export OPENAI_API_KEY="your-openai-api-key-here"
-
-# or
-export ANTHROPIC_API_KEY="your-anthropic-api-key-here"
 ```
 
 ### 3. Get Your Linkding API Key
