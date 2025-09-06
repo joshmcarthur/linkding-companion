@@ -2,6 +2,12 @@
 
 A Ruby on Rails application that provides a companion interface to [Linkding](https://linkding.link/), a self-hosted bookmark manager.
 
+![Linkding Companion](./docs/dashboard.png)
+
+> [!INFO]
+> Linkding Companion is a self-hosted application. You can run it on your own server or use the Docker image.
+> **It requires a Linkding instance to work.** It has a basic web interface to view bookmarks and tags and kick off processing, but expects you to use Linkding itself to interact with your bookmarks.
+
 ## Features
 
 - AI autotagging of bookmarks
