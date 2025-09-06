@@ -1,10 +1,12 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
   release:
     types: [created]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -12,8 +14,8 @@ env:
 
 jobs:
   update-latest:
-    # Only run this job when pushing to main, not during manual releases
-    if: github.event_name == 'push'
+    # Only run this job when CI completes on main, not during manual releases
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -40,7 +42,7 @@ jobs:
 
   build-docker:
     needs: [update-latest]
-    if: github.event_name == 'push' || github.event_name == 'release'
+    if: always() && (github.event_name == 'workflow_run' || github.event_name == 'release')
     runs-on: ubuntu-latest
     permissions:
       contents: read
