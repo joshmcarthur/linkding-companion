@@ -8,7 +8,7 @@ class BookmarksController < ApplicationController
       limit: limit,
       offset: offset,
       q: q
-    }.compact_blank)
+    }.compact_blank).to_a
   end
 
   def autotag

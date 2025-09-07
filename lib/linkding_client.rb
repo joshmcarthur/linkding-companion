@@ -1,6 +1,7 @@
 require "faraday"
 require "json"
 require "ostruct"
+require_relative "linkding/paginated_collection"
 
 class LinkdingClient
   class Error < StandardError; end
@@ -21,11 +22,11 @@ class LinkdingClient
 
   # Bookmarks API
   def list_bookmarks(params = {})
-    get("/api/bookmarks/", params)
+    paginated_collection("/api/bookmarks/", params)
   end
 
   def list_archived_bookmarks(params = {})
-    get("/api/bookmarks/archived/", params)
+    paginated_collection("/api/bookmarks/archived/", params)
   end
 
   def get_bookmark(id)
@@ -62,7 +63,7 @@ class LinkdingClient
 
   # Bookmark Assets API
   def list_bookmark_assets(bookmark_id, params = {})
-    get("/api/bookmarks/#{bookmark_id}/assets/", params)
+    paginated_collection("/api/bookmarks/#{bookmark_id}/assets/", params)
   end
 
   def get_bookmark_asset(bookmark_id, asset_id)
@@ -71,7 +72,7 @@ class LinkdingClient
 
   def download_bookmark_asset(bookmark_id, asset_id)
     response = @connection.get("/api/bookmarks/#{bookmark_id}/assets/#{asset_id}/download/")
-    handle_response(response, raw: true)
+    handle_response(response)
   end
 
   def upload_bookmark_asset(bookmark_id, file)
@@ -111,7 +112,7 @@ class LinkdingClient
 
   # Tags API
   def list_tags(params = {})
-    get("/api/tags/", params)
+    paginated_collection("/api/tags/", params)
   end
 
   def get_tag(id)
@@ -124,7 +125,7 @@ class LinkdingClient
 
   # Bundles API
   def list_bundles(params = {})
-    get("/api/bundles/", params)
+    paginated_collection("/api/bundles/", params)
   end
 
   def get_bundle(id)
@@ -152,19 +153,6 @@ class LinkdingClient
     get("/api/user/profile/")
   end
 
-  private
-
-  def build_connection
-    Faraday.new(url: @host) do |conn|
-      conn.request :json
-      conn.request :multipart
-      conn.response :json, content_type: /\bjson$/, parser_options: { object_class: OpenStruct }
-      conn.headers["Authorization"] = "Token #{@api_key}"
-      conn.headers["User-Agent"] = "linkding-companion/#{version}"
-      conn.adapter Faraday.default_adapter
-    end
-  end
-
   def get(path, params = {})
     response = @connection.get(path, params)
     handle_response(response)
@@ -190,12 +178,28 @@ class LinkdingClient
     handle_response(response)
   end
 
-  def handle_response(response, raw: false)
+  private
+
+  def paginated_collection(path, params = {})
+    Linkding::PaginatedCollection.new(self, path, params)
+  end
+
+  def build_connection
+    Faraday.new(url: @host) do |conn|
+      conn.request :json
+      conn.response :json, content_type: /\bjson$/, parser_options: { object_class: OpenStruct }
+      conn.headers["Authorization"] = "Token #{@api_key}"
+      conn.headers["User-Agent"] = "linkding-companion/#{version}"
+      conn.adapter Faraday.default_adapter
+    end
+  end
+
+
+
+  def handle_response(response)
     case response.status
     when 200..299
-      return response.body unless raw
-      return JSON.parse(response.body) if response.body.present?
-      true
+      response.body
     when 401
       raise AuthenticationError, "Authentication failed. Check your API key."
     when 404
