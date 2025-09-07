@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Linkding bookmark manager
+  linkding:
+    image: sissbruecker/linkding:latest
+    container_name: linkding_dev
+    ports:
+      - "9090:9090"
+    environment:
+      - LD_SUPERUSER_NAME=admin
+      - LD_SUPERUSER_PASSWORD=admin
+    volumes:
+      - linkding_data:/etc/linkding/data
+
+  # Rails application
+  rails:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: linkding_companion_dev
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - LINKDING_HOST=http://linkding:9090
+      - LINKDING_API_KEY=your-api-key-here
+      - OPENAI_API_KEY=your-openai-api-key-here
+      - SECRET_KEY_BASE=your-secret-key-base-here
+    volumes:
+      - .:/rails
+      - rails_bundle:/usr/local/bundle
+      - rails_storage:/rails/storage
+      - rails_node_modules:/rails/node_modules
+    depends_on:
+      linkding:
+        condition: service_healthy
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "
+        bundle install &&
+        ./bin/rails db:create db:migrate &&
+        ./bin/rails server -b 0.0.0.0 -p 3000
+      "
+
+volumes:
+  linkding_data:
+  rails_bundle:
+  rails_storage:
+  rails_node_modules:
