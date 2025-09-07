@@ -14,4 +14,12 @@ class BookmarksController < ApplicationController
   def autotag
     LinkdingAutotagJob.perform_later(params[:id])
   end
+
+  def readability
+    LinkdingReadabilityJob.perform_later(params[:id])
+  end
+
+  def summarize
+    LinkdingSummarizeJob.perform_later(params[:id])
+  end
 end

@@ -27,6 +27,8 @@
         <nav class="level is-mobile">
           <div class="level-left">
             <%= button_to "Autotag", bookmark_autotag_path(bookmark.id), class: "level-item button is-light" %>
+            <%= button_to "Readability", bookmark_readability_path(bookmark.id), class: "level-item button is-light" %>
+            <%= button_to "Summarize", bookmark_summarize_path(bookmark.id), class: "level-item button is-light" %>
           </div>
         </nav>
       </div>

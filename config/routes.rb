@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   post "bookmarks/:id/autotag" => "bookmarks#autotag", as: :bookmark_autotag
+  post "bookmarks/:id/readability" => "bookmarks#readability", as: :bookmark_readability
+  post "bookmarks/:id/summarize" => "bookmarks#summarize", as: :bookmark_summarize
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
