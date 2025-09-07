@@ -3,7 +3,7 @@ class LinkdingAutotagJob < ApplicationJob
 
   def perform(bookmark_id)
     bookmark = LinkdingClient.new.get_bookmark(bookmark_id)
-    tags = LinkdingClient.new.list_tags(bookmark_id: bookmark_id).results
+    tags = LinkdingClient.new.list_tags(bookmark_id: bookmark_id)
     return if bookmark.is_archived.present?
 
     chat = RubyLLM.chat
