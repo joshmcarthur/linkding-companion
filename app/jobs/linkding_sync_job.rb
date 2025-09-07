@@ -11,6 +11,7 @@ class LinkdingSyncJob < ApplicationJob
       LinkdingAutotagJob.perform_later(bookmark.id)
       LinkdingReadabilityJob.perform_later(bookmark.id)
       LinkdingSummarizeJob.perform_later(bookmark.id)
+      LinkdingSearchJob.perform_later(bookmark.id)
 
       Event.create!(bookmark_id: bookmark.id, action: :bookmark_created, occurred_at: bookmark.created_at, extra: bookmark.to_json)
     end
