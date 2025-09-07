@@ -10,14 +10,156 @@ A Ruby on Rails application that provides a companion interface to [Linkding](ht
 
 ## Features
 
-- AI autotagging of bookmarks
-- AI summarisation of bookmarks (_coming soon_)
-- Automatic conceptual bundling of bookmarks (_coming soon_)
-- Automatic search continuation (bookmark search, expand to recommended results) (_coming soon_)
-- Roll-up bundles into email or audio digests (_coming soon_)
-- Faraday-based HTTP client for the Linkding API
-- Full API coverage including bookmarks, tags, bundles, and user profile
-- Support for Rails credentials and environment variable configuration
+### AI autotagging
+
+AI autotagging automatically tags bookmarks with the appropriate tags. This is useful for clustering bookmarks and for search.
+
+#### Setup
+
+AI autotagging requires an OpenAI API key. To get one:
+
+1. Visit [OpenAI](https://openai.com/)
+2. Sign up for an account
+3. Create a new API key
+
+> Note: At the time of writing, the gpt-4.1-nano model is used by default. This model is a good balance of speed, accuracy, and cost.
+
+Configure your API key using either method:
+
+##### Option A: Rails Credentials
+
+```bash
+rails credentials:edit
+```
+
+Add your OpenAI API key:
+
+```yaml
+openai:
+  api_key: "your-openai-api-key-here"
+```
+
+##### Option B: Environment Variables
+
+```bash
+export OPENAI_API_KEY="your-openai-api-key-here"
+```
+
+#### Usage
+
+This feature runs on all received bookmarks, and will add tags based on the content of the bookmark, including title, description, URL, notes and tags.
+If the tagging is overzealous, tags can be removed in bulk in the Linkding Admin UI (`https://your-linkding-instance.com/admin/tags`).
+
+### Content extraction
+
+This feature extracts the content of the bookmark, including title, description, URL, notes and tags. It uses [Readability](https://github.com/mozilla/readability) for this, which
+is the same tool used by Firefox to extract content from web pages. Note that this is a Node.js tool, so you will need to have Node.js installed. The default Dockerfile already does this for you.
+
+#### Setup
+
+Ensure that you have a working Node.js installation. The default Dockerfile already does this for you, otherwise the latest Node.js LTS is recommended.
+Package installation is not required, as required packages will be installed automatically.
+
+#### Usage
+
+This feature runs on all received bookmarks, and will add the extracted content to the bookmark's notes. It will also upload the extracted content as a bookmark asset named 'content.txt'.
+
+### AI summarisation
+
+This feature automatically generates a summary of the bookmark's content. It uses the extracted content if available, otherwise it uses the description.
+
+#### Setup
+
+AI summarisation requires an OpenAI API key. To get one:
+
+1. Visit [OpenAI](https://openai.com/)
+2. Sign up for an account
+3. Create a new API key
+
+> Note: At the time of writing, the gpt-4.1-nano model is used by default. This model is a good balance of speed, accuracy, and cost.
+
+Configure your API key using either method:
+
+##### Option A: Rails Credentials
+
+```bash
+rails credentials:edit
+```
+
+Add your OpenAI API key:
+
+```yaml
+openai:
+  api_key: "your-openai-api-key-here"
+```
+
+##### Option B: Environment Variables
+
+```bash
+export OPENAI_API_KEY="your-openai-api-key-here"
+```
+
+#### Usage
+
+This feature runs on all received bookmarks, and will add a summary to the bookmark's description.
+
+### Search continuation
+
+Search continuation allows you to bookmark a search URL and have it automatically updated with the most relevant result. This is useful for tracking search results over time or saving searches to check later.
+
+#### Setup
+
+Search continuation requires a Brave Search API key. To get one:
+
+1. Visit [Brave Search API](https://brave.com/search/api/)
+2. Sign up to use the Brave Search API (requires an email address)
+3. Activate the free subscription (requires a payment method to be added)
+4. Request a new API key
+
+> Note: The free tier includes 2,000 searches per month
+
+Configure your API key using either method:
+
+##### Option A: Rails Credentials
+
+```bash
+rails credentials:edit
+```
+
+Add your Brave Search API key:
+
+```yaml
+brave_search:
+  api_key: "your-brave-api-key-here"
+```
+
+##### Option B: Environment Variables
+
+```bash
+export BRAVE_API_KEY="your-brave-api-key-here"
+```
+
+For Docker, add the environment variable to your run command:
+
+```bash
+docker run -d -p 80:80 \
+  -e BRAVE_API_KEY=your-brave-api-key-here \
+  -e LINKDING_HOST=https://linkding.example.com \
+  -e LINKDING_API_KEY=your-api-key-here \
+  -e OPENAI_API_KEY=your-openai-api-key-here \
+  -e SECRET_KEY_BASE=your-secret-key-base-here \
+  --name linkding_companion ghcr.io/joshmcarthur/linkding_companion:latest
+```
+
+#### Usage
+
+1. Create a bookmark in Linkding with a search URL containing a 'q' parameter
+   - Example: `https://example.com/search?q=ruby+on+rails`
+2. Linkding Companion will automatically:
+   - Extract the search query
+   - Find the most relevant result using Brave Search
+   - Update the bookmark with the result
+   - Process it with auto-tagging and other enabled features
 
 ## Setup (Docker)
 
