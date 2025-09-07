@@ -75,10 +75,33 @@ class LinkdingClient
   end
 
   def upload_bookmark_asset(bookmark_id, file)
-    payload = { file: Faraday::UploadIO.new(file, "application/octet-stream") }
-    response = @connection.post("/api/bookmarks/#{bookmark_id}/assets/upload/") do |req|
-      req.body = payload
+    file_path = if file.respond_to?(:path) && file.path
+      file.path
+    elsif file.is_a?(String) && File.exist?(file)
+      file
+    else
+      raise ArgumentError, "Invalid file object. Expected file with path, uploaded file, or file path string."
     end
+
+    content_type = Marcel::MimeType.for(file_path)
+
+    # Create a custom multipart request
+    boundary = "----WebKitFormBoundary#{SecureRandom.hex(16)}"
+
+    body = []
+    body << "--#{boundary}"
+    body << "Content-Disposition: form-data; name=\"file\"; filename=\"#{File.basename(file_path)}\""
+    body << "Content-Type: #{content_type}"
+    body << ""
+    body << File.read(file_path)
+    body << "--#{boundary}--"
+    body << ""
+
+    response = @connection.post("/api/bookmarks/#{bookmark_id}/assets/upload/") do |req|
+      req.headers["Content-Type"] = "multipart/form-data; boundary=#{boundary}"
+      req.body = body.join("\r\n")
+    end
+
     handle_response(response)
   end
 
@@ -134,6 +157,7 @@ class LinkdingClient
   def build_connection
     Faraday.new(url: @host) do |conn|
       conn.request :json
+      conn.request :multipart
       conn.response :json, content_type: /\bjson$/, parser_options: { object_class: OpenStruct }
       conn.headers["Authorization"] = "Token #{@api_key}"
       conn.headers["User-Agent"] = "linkding-companion/#{version}"

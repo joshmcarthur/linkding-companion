@@ -22,6 +22,13 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+# Install Node.js for readability extraction
+ARG NODE_VERSION=22.15.0
+ENV PATH=/usr/local/node/bin:$PATH
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    rm -rf /tmp/node-build-master
+
 # Set production environment
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
@@ -69,6 +76,10 @@ RUN rm -rf node_modules
 
 # Final stage for app image
 FROM base
+
+# Copy Node.js from build stage for readability extraction
+COPY --from=build /usr/local/node /usr/local/node
+ENV PATH=/usr/local/node/bin:$PATH
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"

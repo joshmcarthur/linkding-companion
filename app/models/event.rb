@@ -3,6 +3,7 @@ class Event < ApplicationRecord
 
   enum :action, {
     bookmark_created: "bookmark_created",
-    tagged: "tagged"
+    tagged: "tagged",
+    readability_extracted: "readability_extracted"
   }
 end

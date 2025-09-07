@@ -9,6 +9,7 @@ class LinkdingSyncJob < ApplicationJob
       next if bookmark.is_archived.present?
 
       LinkdingAutotagJob.perform_later(bookmark.id)
+      LinkdingReadabilityJob.perform_later(bookmark.id)
 
       Event.create!(bookmark_id: bookmark.id, action: :bookmark_created, occurred_at: bookmark.created_at, extra: bookmark.to_json)
     end
