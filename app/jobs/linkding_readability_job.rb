@@ -1,5 +1,6 @@
 require "shellwords"
 require "uri"
+require "tmpdir"
 
 class LinkdingReadabilityJob < ApplicationJob
   queue_as :default
@@ -84,17 +85,16 @@ class LinkdingReadabilityJob < ApplicationJob
 
   def upload_readable_asset(bookmark_id, readable_content)
     # Create a temporary file with the readable content
-    temp_file = Tempfile.new([ "content", ".txt" ])
-    temp_file.write(readable_content)
-    temp_file.rewind
+    temp_path = File.join(Dir.tmpdir, "content.txt")
+    File.write(temp_path, readable_content)
 
     # Upload as bookmark asset
-    LinkdingClient.new.upload_bookmark_asset(bookmark_id, temp_file)
+    LinkdingClient.new.upload_bookmark_asset(bookmark_id, temp_path)
 
     # Clean up temp file
-    temp_file.close
-    temp_file.unlink
+    File.unlink(temp_path)
   rescue => e
     Rails.logger.error "Error uploading readable asset: #{e.message}"
+    File.unlink(temp_path) if File.exist?(temp_path)
   end
 end
